@@ -2,7 +2,7 @@
  * @Author: fangyi fang@zhongan.com
  * @Date: 2023-03-14 15:34:41
  * @LastEditors: fangyi fang@zhongan.com
- * @LastEditTime: 2023-05-10 18:42:38
+ * @LastEditTime: 2023-05-23 15:32:49
  * @FilePath: /my-tauri/vite.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,6 +19,9 @@ const mobile =
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
+  alias: {
+    '@': path.resolve(__dirname, 'src'),
+  },
   plugins: [tsconfigPaths(), reactRefresh()],
   css: {
     preprocessorOptions: {

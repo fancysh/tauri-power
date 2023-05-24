@@ -1,0 +1,54 @@
+use std::process::{Command, Output};
+use tauri::api::process::Command as TauriCommand;
+// use tauri::api::ipc::{CallbackFn};
+tauri::api::ipc::format_callback;
+
+#[tauri::command]
+fn load(url: String, path: String, callback: callback) {
+    let clone_command = Command::new("git")
+        .arg("clone")
+        .arg(&url)
+        .arg(&path)
+        .spawn()
+        .expect("Failed to execute git clone command");
+
+    let process = clone_command.id();
+
+    std::thread::spawn(move || {
+        let output_result: Result<Output, std::io::Error> = TauriCommand::new("git")
+            .arg("clone")
+            .arg(&url)
+            .arg(&path)
+            .output();
+
+        match output_result {
+            Ok(output) => {
+                let output_str = String::from_utf8_lossy(&output.stdout);
+                let error_str = String::from_utf8_lossy(&output.stderr);
+
+                let progress = calculate_progress(&output_str);
+                callback.emit(progress);
+            }
+            Err(error) => {
+                callback.emit_error(format!("Failed to execute git clone command: {}", error));
+            }
+        }
+    });
+}
+
+fn calculate_progress(output: &str) -> u32 {
+    // Calculate the progress based on the output
+    // ...
+
+    // Return the progress value
+    50
+}
+
+fn main() {
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![
+            load
+        ])
+        .run(tauri::generate_context!())
+        .expect("Failed to run Tauri application.");
+}

@@ -56,7 +56,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "my-tauri",
+        "title": "tauri-power",
         "width": 800,
         "height": 600
       }
